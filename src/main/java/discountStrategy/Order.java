@@ -3,12 +3,22 @@ package discountStrategy;
 public class Order {
     private double totalAmount;
 
+    private Discount discount;
+
     public Order(double totalAmount) {
         this.totalAmount = totalAmount;
     }
 
+    public void setDiscount(Discount discount){
+        this.discount = discount;
+    }
+
     public double getTotalAmount() {
         return totalAmount;
+    }
+
+    public double applyDiscount(){
+        return this.totalAmount - discount.calculateDiscount(this.totalAmount);
     }
 
     public double applyFlatDiscount() {

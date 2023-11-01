@@ -1,8 +1,6 @@
 package fileHandler;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 
 
@@ -21,69 +19,76 @@ import java.util.Iterator;
 
 public class FileHandler {
 
-    private String filename;
+//    private String filename;
+//
+//    public FileHandler(String filename) {
+//        this.filename = filename;
+//    }
 
-    public FileHandler(String filename) {
-        this.filename = filename;
-    }
+//    public String readFile() throws IOException {
+//        StringBuilder content = new StringBuilder();
+//        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+//            String line;
+//            while ((line = br.readLine()) != null) {
+//                content.append(line).append("\n");
+//            }
+//        }
+//        return content.toString();
+//    }
 
-    public String readFile() throws IOException {
-        StringBuilder content = new StringBuilder();
-        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                content.append(line).append("\n");
-            }
-        }
-        return content.toString();
-    }
+//    public void writeFile(String content) throws IOException {
+//        try (FileWriter writer = new FileWriter(filename)) {
+//            writer.write(content);
+//        }
+//    }
 
-    public void writeFile(String content) throws IOException {
-        try (FileWriter writer = new FileWriter(filename)) {
-            writer.write(content);
-        }
-    }
-
-    public String jsonToXml(String jsonContent) throws Exception {
-        // Using org.json for JSON parsing.
-        JSONObject json = new JSONObject(jsonContent);
-        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-
-        Document doc = docBuilder.newDocument();
-        Element rootElement = doc.createElement("root");
-        doc.appendChild(rootElement);
-
-        Iterator<String> keys = json.keys();
-        while (keys.hasNext()) {
-            String key = keys.next();
-            Element keyElement = doc.createElement(key);
-            keyElement.appendChild(doc.createTextNode(json.get(key).toString()));
-            rootElement.appendChild(keyElement);
-        }
-
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        Transformer transformer = transformerFactory.newTransformer();
-        DOMSource source = new DOMSource(doc);
-
-        java.io.StringWriter writer = new java.io.StringWriter();
-        StreamResult result = new StreamResult(writer);
-
-        transformer.transform(source, result);
-        return writer.toString();
-    }
+//    public String jsonToXml(String jsonContent) throws Exception {
+//        // Using org.json for JSON parsing.
+//        JSONObject json = new JSONObject(jsonContent);
+//        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+//        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+//
+//        Document doc = docBuilder.newDocument();
+//        Element rootElement = doc.createElement("root");
+//        doc.appendChild(rootElement);
+//
+//        Iterator<String> keys = json.keys();
+//        while (keys.hasNext()) {
+//            String key = keys.next();
+//            Element keyElement = doc.createElement(key);
+//            keyElement.appendChild(doc.createTextNode(json.get(key).toString()));
+//            rootElement.appendChild(keyElement);
+//        }
+//
+//        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+//        Transformer transformer = transformerFactory.newTransformer();
+//        DOMSource source = new DOMSource(doc);
+//
+//        java.io.StringWriter writer = new java.io.StringWriter();
+//        StreamResult result = new StreamResult(writer);
+//
+//        transformer.transform(source, result);
+//        return writer.toString();
+//    }
 
     public static void main(String[] args) {
+
+        String filename = "src/main/resources/sample.txt";
+
         try {
-            FileHandler handler = new FileHandler("src/main/resources/sample.txt");
-            String content = handler.readFile();
+
+            FileReader fileReader = new FileReader(filename);
+            FileWriter fileWriter = new FileWriter(filename);
+            ContentFormatter formatter = new ContentFormatter();
+            String content = fileReader.readFile();
             System.out.println(content);
 
             String jsonContent = "{\"name\": \"John\", \"age\": 30}";
-            String xmlContent = handler.jsonToXml(jsonContent);
+            String xmlContent = formatter.jsonToXml(jsonContent);
 
-            handler.writeFile(xmlContent);
+            fileWriter.writeFile(xmlContent);
             System.out.println(xmlContent);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
